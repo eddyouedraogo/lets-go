@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import React, { useState } from 'react';
 
 import { FIREBASE_AUTH} from '../firebase';
@@ -49,8 +49,7 @@ const LoginScreen = () => {
         </View>
 
     </KeyboardAvoidingView>
-
-  )
+)
 }
 
 export default LoginScreen
