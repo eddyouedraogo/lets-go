@@ -5,7 +5,7 @@ import { FIREBASE_AUTH} from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const auth = FIREBASE_AUTH;
@@ -21,15 +21,6 @@ const LoginScreen = () => {
             alert(error.message)
         }
     }
-    const signUp = async () => {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredentials => {
-            const user = userCredentials.user;
-            console.log(user.email);
-        })
-        .catch(error => alert(error.message))
-    }
-  
     return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
         <View style={styles.inputContainer}>
@@ -37,15 +28,43 @@ const LoginScreen = () => {
             </TextInput>
             <TextInput placeholder='Password' value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry>
             </TextInput>
+            <Text style={styles.resetPasswordText} onPress={() => navigation.navigate('Password Reset')}>Forgot your password ?</Text>
         </View>
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity  onPress={signIn} style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={signUp} style={[styles.button, styles.buttonOutline]}>
+            <TouchableOpacity style={[styles.button, styles.buttonOutline]}>
                 <Text style={styles.buttonOutlineText}>Register</Text>
             </TouchableOpacity>
+        </View>
+
+        <View>
+            <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
+                <Text style={styles.signUpText}>Don't have an account yet ? Sign up.</Text>
+            </TouchableOpacity>
+        </View>
+
+        <View>
+            <Text>
+                Or Sign in using
+            </Text>
+        </View>
+
+        <View>
+            <Text>
+                Google
+            </Text>
+            <Text>
+                Facebook
+            </Text>
+            <Text>
+                Apple
+            </Text>
+            <Text>
+                Phone number
+            </Text>
         </View>
 
     </KeyboardAvoidingView>
@@ -68,7 +87,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
-        marginTop: 5
+        marginTop: 5,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'grey'
     },
     buttonContainer : {
         width: '60%',
@@ -98,5 +120,14 @@ const styles = StyleSheet.create({
         color: '#0782F9',
         fontWeight: '700',
         fontSize: 16
+    },
+    resetPasswordText : {
+        marginTop: 10,
+        color: '#0782F9'
+    },
+    signUpText : {
+        marginTop: 25,
+        color: '#0782F9'
     }
+    
 })

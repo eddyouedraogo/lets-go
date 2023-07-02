@@ -8,6 +8,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import { useEffect, useState } from 'react';
 import { FIREBASE_AUTH } from './firebase';
 import { onAuthStateChanged } from'firebase/auth';
+import PasswordResetScreen from './screens/PasswordResetScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -17,7 +18,6 @@ function InsideLayout() {
   return (
     <InsideStack.Navigator>
       <InsideStack.Screen name="Home" component={HomeScreen} />
-      <InsideStack.Screen name="SignUp" component={SignUpScreen} />
     </InsideStack.Navigator>
   )
 }
@@ -39,6 +39,8 @@ export default function App() {
         ):
         <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
         }
+        <Stack.Screen name="Sign Up" component={SignUpScreen} />
+        <Stack.Screen name="Password Reset" component={PasswordResetScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
