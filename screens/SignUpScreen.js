@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TextInput, ImageBackground, SafeAreaView, TouchableOpacity, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { FIREBASE_AUTH} from '../firebase';
@@ -8,56 +8,123 @@ const SignUpScreen = () => {
     const [password, setPassword] = useState('');
     const [username, setDisplayName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState(null);
-    const DATA = [
+    const cities = [
         {
           id: "1",
-          title: "Paris",
+          name: "Paris",
+          coordinate: {
+            latitude: "48.856613",
+            longitude: "2.352222",
+          },
+          image: require('../assets/paris.png')
         },
         {
           id: "2",
-          title: "Montreal",
+          name: "Montreal",
+          coordinate: {
+            latitude: "45.501690",
+            longitude: "-73.567253",
+          },
+          image: require('../assets/montreal.png')
         },
         {
           id: "3",
-          title: "Dakar",
+          name: "Dakar",
+          coordinate: {
+            latitude: "14.716677",
+            longitude: "-17.467686",
+          },
+          image: require('../assets/dakar.png')
         },
         {
           id: "4",
-          title: "Ouagadougou",
+          name: "Ouagadougou",
+          coordinate: {
+            latitude: "12.371428",
+            longitude: "-1.519660",
+          },
+          image: require('../assets/ouagadougou.png')
         },
         {
           id: "5",
-          title: "Brussels",
+          name: "Brussels",
+          coordinate: {
+            latitude: "50.850346",
+            longitude: "4.351721",
+          },
+          image: require('../assets/paris.png')
         },
         {
           id: "6",
-          title: "Reykjavik",
+          name: "Reykjavik",
+          coordinate: {
+            latitude: "64.128288",
+            longitude: "-21.827774",
+          },
+          image: require('../assets/reykjavik.png')
         },
         {
           id: "7",
-          title: "Venice",
+          name: "Venice",
+          coordinate: {
+            latitude: "45.444958",
+            longitude: "12.328463",
+          },
+          image: require('../assets/venice.png')
         },
         {
           id: "8",
-          title: "New York",
+          name: "New York",
+          coordinate: {
+            latitude: "40.730610",
+            longitude: "-73.935242",
+          },
+          image: require('../assets/new-york.png')
         },
         {
           id: "9",
-          title: "Atlanta",
+          name: "Atlanta",
+          coordinate: {
+            latitude: "33.753746",
+            longitude: "-84.386330",
+          },
+          image: require('../assets/atlanta.png')
         },
         {
           id: "10",
-          title: "Nantes",
+          name: "Nantes",
+          coordinate: {
+            latitude: "47.218102",
+            longitude: "-1.552800",
+          },
+          image: require('../assets/nantes.png')
         },
         {
           id: "11",
-          title: "Los Angeles",
+          name: "Los Angeles",
+          coordinate: {
+            latitude: "34.0522342",
+            longitude: "-118.2436849",
+          },
+          image: require('../assets/los-angeles.png')
         },
         {
           id: "12",
-          title: "Switzerland",
+          name: "Switzerland",
+          coordinate: {
+            latitude: "46.204391",
+            longitude: "6.143158",
+          },
+          image: require('../assets/switzerland.png')
         },
-      ]; 
+      ];
+      const favoriteCities  = [];
+
+      function addFavoriteCities(event) {
+        favoriteCities.push(event)
+        console.log(favoriteCities);
+      }
+
 
     const auth = FIREBASE_AUTH;
     const signUp = async () => {
@@ -77,7 +144,7 @@ const SignUpScreen = () => {
     }
   
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
         <ProgressSteps>
             <ProgressStep label="First Step">
                 <View style={styles.inputContainer}>
@@ -109,17 +176,34 @@ const SignUpScreen = () => {
                 </View>
             </ProgressStep>
             <ProgressStep label="Second Step">
-                <View style={{ alignItems: 'center' }}>
-                    <Text>This is the content within step 2!</Text>
-                </View>
+              <View>
+                {
+                  cities.map((city) => {
+                    return (
+                      <TouchableOpacity onPress={addFavoriteCities}>
+                        <ImageBackground style={styles.cardImage} source={city.image}>
+                        <Text 
+                        style={{
+                          color: 'white',
+                          fontSize: 15,
+                          fontWeight: 'bold',
+                          marginTop: 110,
+                        }}
+                        key={city.id}>
+                          {city.name}
+                        </Text>
+                      </ImageBackground>
+                      </TouchableOpacity>
+                    )
+                  })
+                }
+              </View>
             </ProgressStep>
             <ProgressStep label="Third Step" onSubmit={signUp} >
-                <View style={{ alignItems: 'center' }}>
-                    <Text>This is the content within step 3!</Text>
-                </View>
+              <Text>This is the content within step 3!</Text>
             </ProgressStep>
         </ProgressSteps>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -180,5 +264,16 @@ const styles = StyleSheet.create({
     signUpText : {
         marginTop: 25,
         color: '#0782F9'
-    }
+    },
+    cardImage: {
+      width: 150,
+      height: 150,
+      marginRight: 20,
+      borderRadius: 10,
+      overflow: 'hidden',
+      padding: 10,
+    },
+    cardContainer: {
+      flexWrap: 'wrap'
+    },
 })
