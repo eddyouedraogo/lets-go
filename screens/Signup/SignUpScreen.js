@@ -5,7 +5,10 @@ import { FIREBASE_AUTH} from '../../firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { Icon, SocialIcon } from 'react-native-elements';
 import PhoneInput from 'react-native-phone-number-input';
-
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps'
+import FavoriteCitiesSelectionScreen from './FavoriteCitiesSelectionScreen';
+import PointOfInterestSelectionScreen from './PointOfInterestSelectionScreen';
+import SignupUserInfoScreen from './SignupUserInfoScreen';
 
 const SignUpScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
@@ -40,106 +43,18 @@ const SignUpScreen = ({navigation}) => {
   
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.signUpTextView}>
-        <Text style={styles.thirdPartiesSignupText}>Sign up using</Text>
-      </View>
 
-      <View style={styles.thirdPartiesView}>
-            <View style={styles.thirdPartiesInsideView}>
-                <SocialIcon type='google' light/>
-            </View>
-            <View style={styles.thirdPartiesInsideView}>
-                <SocialIcon type='facebook'/>
-            </View>
-            <View style={styles.thirdPartiesInsideView}>
-                <SocialIcon type='apple' iconColor='black' light/>
-            </View>
-            <View style={styles.thirdPartiesInsideView}>
-                {/* NOTE : There's no existing social icon for phone */}
-                <Icon name='phone' type='font-awesome' reverse color={'green'}/>
-            </View>
-        </View>
-        
-        <View style={styles.dividerContainerView}>
-          <View style={styles.dividerInsideView} />
-          <Text style={styles.dividerText}>Or Sign up using your email</Text>
-          <View style={styles.dividerInsideView} />
-        </View>
-        
-        <View style={styles.inputContainer}>
-          <TextInput 
-            autoCapitalize = "none"
-            placeholder='Username' 
-            value={username} 
-            onChangeText={(text) => setDisplayName(text)} 
-            style={styles.input}
-            />        
-            <TextInput 
-              autoCapitalize = "none"
-              placeholder='Email' 
-              value={email} 
-              onChangeText={(text) => setEmail(text)} 
-              style={styles.input}/>
-            <TextInput 
-              placeholder='Password' 
-              value={password} onChangeText={(text) => setPassword(text)} 
-              style={styles.input} secureTextEntry/>
-            <PhoneInput 
-              value={phoneNumber}
-              containerStyle={styles.phoneNumberContainer}
-              textContainerStyle={styles.phoneNumberInput}
-              defaultCode='CA'
-              // onChangeCountry={(text) => setPhoneNumber(text)}
-              onChangeText={(text) => setPhoneNumber(text)}
-              onChangeFormattedText={(text) => setPhoneNumber(text)}
-              >
-            </PhoneInput>
-        </View>
-
-        {/* TODO validate fields before going to the next page */}
-        <View style={styles.nextButton}>
-          <Icon 
-          raised 
-          name='chevron-right' 
-          type='font-awesome' 
-          reverse 
-          color={'#258FFF'}
-          onPress={() => navigation.navigate("Favorite Cities")}
-          />
-        </View>
-        
-        {/* <ProgressSteps>
+        <ProgressSteps>
             <ProgressStep label="First Step">
-                
+                <SignupUserInfoScreen/>
             </ProgressStep>
             <ProgressStep label="Second Step">
-              <View>
-                {
-                  cities.map((city) => {
-                    return (
-                      <TouchableOpacity onPress={addFavoriteCities}>
-                        <ImageBackground style={styles.cardImage} source={city.image}>
-                        <Text 
-                        style={{
-                          color: 'white',
-                          fontSize: 15,
-                          fontWeight: 'bold',
-                          marginTop: 110,
-                        }}
-                        key={city.id}>
-                          {city.name}
-                        </Text>
-                      </ImageBackground>
-                      </TouchableOpacity>
-                    )
-                  })
-                }
-              </View>
+              <FavoriteCitiesSelectionScreen/>
             </ProgressStep>
             <ProgressStep label="Third Step" onSubmit={signUp} >
-              <Text>This is the content within step 3!</Text>
+              <PointOfInterestSelectionScreen/>
             </ProgressStep>
-        </ProgressSteps> */}
+        </ProgressSteps>
     </KeyboardAvoidingView>
   )
 }
@@ -213,9 +128,15 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   nextButton : {
-    position: 'absolute',
-    bottom:50,
-    right:50
+    flex: 1,
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+    // position: 'absolute',
+    // bottom:50,
+    // right:50
+  },
+  navigationFooter : {
+    flexDirection: 'row'
   }
 
 })
