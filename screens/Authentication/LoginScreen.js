@@ -1,8 +1,9 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import React, { useState } from 'react';
 
-import { FIREBASE_AUTH} from '../firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import { FIREBASE_AUTH} from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Icon, SocialIcon } from 'react-native-elements';
 
 
 const LoginScreen = ({navigation}) => {
@@ -23,6 +24,9 @@ const LoginScreen = ({navigation}) => {
     }
     return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
+        <View style={styles.titleView}>
+            <Text style={styles.titleText}>Let's Go !</Text>
+        </View>
         <View style={styles.inputContainer}>
             <TextInput placeholder='Email' value={email} onChangeText={(text) => setEmail(text)} style={styles.input}>
             </TextInput>
@@ -35,38 +39,38 @@ const LoginScreen = ({navigation}) => {
             <TouchableOpacity  onPress={signIn} style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.buttonOutline]}>
-                <Text style={styles.buttonOutlineText}>Register</Text>
-            </TouchableOpacity>
         </View>
 
-        <View>
+        <View style={styles.signUpView}>
+            <Text>Don't have an account yet ?</Text> 
             <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
-                <Text style={styles.signUpText}>Don't have an account yet ? Sign up.</Text>
+                <Text style={styles.signUpText}>Sign up.</Text>
             </TouchableOpacity>
         </View>
 
-        <View>
-            <Text>
+        <View style={styles.signInThirdPartiesView}>
+            <View style={styles.dividerView}/>
+            <Text style={styles.signInThirdPartiesText}>
                 Or Sign in using
             </Text>
+            <View style={styles.dividerView}/>
         </View>
 
-        <View>
-            <Text>
-                Google
-            </Text>
-            <Text>
-                Facebook
-            </Text>
-            <Text>
-                Apple
-            </Text>
-            <Text>
-                Phone number
-            </Text>
+        <View style={styles.thirdPartiesView}>
+            <View style={styles.thirdPartiesInsideView}>
+                <SocialIcon type='google' light/>
+            </View>
+            <View style={styles.thirdPartiesInsideView}>
+                <SocialIcon type='facebook'/>
+            </View>
+            <View style={styles.thirdPartiesInsideView}>
+                <SocialIcon type='apple' iconColor='black' light/>
+            </View>
+            <View style={styles.thirdPartiesInsideView}>
+                {/* NOTE : There's no existing social icon for phone */}
+                <Icon raised name='phone' type='font-awesome' reverse color={'green'}/>
+            </View>
         </View>
-
     </KeyboardAvoidingView>
 )
 }
@@ -74,6 +78,16 @@ const LoginScreen = ({navigation}) => {
 export default LoginScreen
 
 const styles = StyleSheet.create({
+    titleView : {
+        marginBottom: 50,
+        marginTop: 50
+    },
+    titleText : {
+        fontSize: 50,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        color: '#0782F9'
+    },
     container : {
         flex: 1,
         justifyContent: 'center',
@@ -125,9 +139,35 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: '#0782F9'
     },
-    signUpText : {
+    signUpView : {
         marginTop: 25,
-        color: '#0782F9'
+        flexDirection:'row',
+    },
+    signUpText : {
+        color: '#0782F9',
+        paddingLeft: 2
+    },
+    signInThirdPartiesView : {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 100,
+        marginBottom: 25
+    },
+    dividerView : {
+        flex: 1,
+        height: 1,
+        backgroundColor: 'grey'
+    },
+    signInThirdPartiesText : {
+        textAlign: 'center',
+        paddingLeft: 10,
+        paddingRight: 10
+    },
+    thirdPartiesView : {
+        flexDirection:'row',
+        alignItems: 'center'
+    },
+    thirdPartiesInsideView : {
+        flexDirection: 'column'
     }
-    
 })

@@ -2,13 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from './screens/LoginScreen';
+import LoginScreen from './screens/Authentication/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
-import SignUpScreen from './screens/SignUpScreen';
+import SignUpScreen from './screens/Signup/SignUpScreen';
 import { useEffect, useState } from 'react';
 import { FIREBASE_AUTH } from './firebase';
 import { onAuthStateChanged } from'firebase/auth';
-import PasswordResetScreen from './screens/PasswordResetScreen';
+import PasswordResetScreen from './screens/Authentication/PasswordResetScreen';
+import FavoriteCitiesSelectionScreen from './screens/Signup/FavoriteCitiesSelectionScreen';
+import PointOfInterestSelectionScreen from './screens/Signup/PointOfInterestSelectionScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +43,8 @@ export default function App() {
         }
         <Stack.Screen name="Sign Up" component={SignUpScreen} />
         <Stack.Screen name="Password Reset" component={PasswordResetScreen} />
+        <Stack.Screen options={{headerShown: false}} name="Favorite Cities" component={FavoriteCitiesSelectionScreen} />
+        <Stack.Screen name="Point of Interests" component={PointOfInterestSelectionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
