@@ -1,6 +1,6 @@
 import { FlatList, ImageBackground, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { Icon } from 'react-native-elements'
+import { Header, Icon } from 'react-native-elements'
 import SearchBar from "react-native-dynamic-search-bar";
 
 const FavoriteCitiesSelectionScreen = ({navigation}) => {
@@ -132,39 +132,45 @@ const FavoriteCitiesSelectionScreen = ({navigation}) => {
     }
   }
 
+  const cityCardView = (city) => {
+    return (
+      <TouchableOpacity>
+        <ImageBackground style={styles.cardImage} source={city.image}>
+          <Text 
+            style={styles.cardImageText}
+            key={city.id}>
+              {city.name}
+          </Text>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* TODO Look Into ScrollView */}
-      <KeyboardAvoidingView style={styles.searchBarContainer}>
-        
-        <SearchBar style={styles.searchBarView}
-          placeholder="Search for cities to explore ..."
-          onChangeText={(search) => searchCities(search)}
-          onClearPress={()=>searchCities("")}/>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.container}>
+          <SearchBar style={styles.searchBarView}
+            placeholder="Search for cities to explore ..."
+            onChangeText={(search) => searchCities(search)}
+            onClearPress={()=>searchCities("")}/>
 
-        <View>
-          <Text style={styles.descriptionText}>Select cities you want to visit :</Text>
+          <View>
+            <Text style={styles.descriptionText}>Select cities you want to visit :</Text>
+          </View>
+        
+          <View style={styles.cardView} >
+            {
+              displayedCities.map(
+                (city, index) => {
+                  return cityCardView(city);
+              })
+            }
+          </View>
         </View>
-        
-        <FlatList
-          nestedScrollEnabled
-          data={displayedCities}
-          renderItem={({item}) => (
-            <TouchableOpacity>
-              <ImageBackground style={styles.cardImage} source={item.image}>
-                <Text 
-                  style={styles.cardImageText}
-                  key={item.id}>
-                    {item.name}
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
-          )}
-          numColumns={2}
-          keyExtractor={(item, index) => index}/>
+      </ScrollView>
 
-
-        <View style={styles.nextButton}>
+      <View style={styles.nextButton}>
           <Icon 
             raised 
             name='chevron-right' 
@@ -185,8 +191,6 @@ const FavoriteCitiesSelectionScreen = ({navigation}) => {
             onPress={() => navigation.goBack()}
           />
         </View>
-
-      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -198,6 +202,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollView: {
+    flex: 1
   },
   nextButton : {
     position: 'absolute',
@@ -212,7 +219,8 @@ const styles = StyleSheet.create({
   cardImage: {
     width: 150,
     height: 150,
-    marginRight: 20,
+    marginRight: 10,
+    marginLeft: 10,
     marginTop: 20,
     borderRadius: 10,
     overflow: 'hidden',
@@ -227,15 +235,14 @@ const styles = StyleSheet.create({
   descriptionText : {
     fontWeight: 'bold'
   },
-  searchBarContainer : {
-    width: '90%',
-    // backgroundColor: 'rgba(52, 52, 52, 0.0)',
-    // borderTopWidth: 0,
-    // borderBottomWidth: 0,
-    // padding: 0
+  cardView : {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row', 
+    flexWrap: 'wrap'
   },
   searchBarView : {
-    marginTop: 75,
+    marginTop: 25,
     marginBottom: 15
   }
 })
