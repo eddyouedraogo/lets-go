@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import React, { useRef, useState } from "react";
 
-
 import { Icon, SocialIcon } from "react-native-elements";
 import PhoneInput from "react-native-phone-number-input";
 
@@ -54,14 +53,11 @@ const SignUpScreen = ({ navigation }) => {
     validateEmail();
     validatePassword();
     if (emailValid && passwordValid && !passwordShort) {
-      navigation.navigate(
-        "Favorite Cities",
-        {
-          userEmail: email,
-          userPassword: password,
-          userName: username
-        }
-      )
+      navigation.navigate("Favorite Cities", {
+        userEmail: email,
+        userPassword: password,
+        userName: email,
+      });
     }
   };
 
@@ -124,14 +120,13 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput
-                    autoCapitalize="none"
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={(text) => setUsername(text)}
-                    // onBlur={sendUserInfo}
-                    style={styles.input}
-                />
+        {/* <TextInput
+          autoCapitalize="none"
+          placeholder="Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+          style={styles.input}
+        /> */}
         <TextInput
           autoCapitalize="none"
           placeholder="Email"
@@ -182,39 +177,6 @@ const SignUpScreen = ({ navigation }) => {
           onPress={validateForm}
         />
       </View>
-
-      {/* <ProgressSteps>
-            <ProgressStep label="First Step">
-                
-            </ProgressStep>
-            <ProgressStep label="Second Step">
-              <View>
-                {
-                  cities.map((city) => {
-                    return (
-                      <TouchableOpacity onPress={addFavoriteCities}>
-                        <ImageBackground style={styles.cardImage} source={city.image}>
-                        <Text 
-                        style={{
-                          color: 'white',
-                          fontSize: 15,
-                          fontWeight: 'bold',
-                          marginTop: 110,
-                        }}
-                        key={city.id}>
-                          {city.name}
-                        </Text>
-                      </ImageBackground>
-                      </TouchableOpacity>
-                    )
-                  })
-                }
-              </View>
-            </ProgressStep>
-            <ProgressStep label="Third Step" onSubmit={signUp} >
-              <Text>This is the content within step 3!</Text>
-            </ProgressStep>
-        </ProgressSteps> */}
     </KeyboardAvoidingView>
   );
 };
