@@ -1,9 +1,16 @@
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ImageBackground} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Icon } from 'react-native-elements'
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebase';
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { addDoc, collection } from 'firebase/firestore';
 
-const PointOfInterestSelectionScreen = ({navigation}) => {
-  const poisCategories =[
+const PointOfInterestSelectionScreen = ({route, navigation}) => {
+  const userConfig = route.params; 
+  const auth = FIREBASE_AUTH;
+  const db = FIREBASE_DB;
+
+  const [poisCategories, setPoisCategories] =useState([
     {
       id: 1,
       name: "Sight",
@@ -24,12 +31,84 @@ const PointOfInterestSelectionScreen = ({navigation}) => {
       name: "Shopping",
       image: require('../../assets/shopping.jpg')
     }
-  ]
+  ])
+
+  const addPoisCategory = (category, index) => {
+    let categories = [...poisCategories];
+
+    if (category.selected) {
+      category.selected = false;
+    } else {
+      category.selected = true;
+    }
+
+    categories[index] = category;
+
+    setPoisCategories(categories);
+  }
+
+  const handleSubmit = () => {
+    const selectedCategories = poisCategories.filter(
+      categories => categories.selected === true
+    );
+    const authData = {
+      ...userConfig,
+      selectedCategories: selectedCategories
+    }
+
+
+    console.log(authData);
+
+    signUp(authData)
+  };
+
+  const addUserData = (authData) => {
+    const username = authData.userData?.userName;
+    const poisCategories = authData.selectedCategories;
+    const favouriteCities = authData.selectedCities;
+    addDoc(
+      collection(db, "User"), 
+      {
+        username : username,
+        favouriteCities: favouriteCities,
+        poisCategories: poisCategories
+      }
+    )
+    .then(
+      (docRef) => {
+        console.log(docRef.id, docRef);
+      }
+    )
+    .catch(
+      (error) => {
+        alert(error.message)
+      }
+    )
+  }
+
+  const signUp = async (authData) => {
+    const email = authData.userData?.userEmail;
+    const password = authData.userData?.userPassword;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.email);
+        addUserData(authData);
+      })
+      .catch(
+        (error) => {
+          alert(error.message)
+        }
+      )
+  };
 
   const displayCategories = (category, index) => {
     return (
-      <TouchableOpacity key={index}>
-        <ImageBackground style={styles.bubble} source={category.image}>
+      <TouchableOpacity key={index} onPress={() => addPoisCategory(category, index)}>
+        <ImageBackground 
+          style={[styles.bubble,
+          category.selected ? styles.bubbleSelected: null]} 
+          source={category.image}>
           <Text style={styles.bubbleText}>{category.name}</Text>
         </ImageBackground>
       </TouchableOpacity>
@@ -37,15 +116,13 @@ const PointOfInterestSelectionScreen = ({navigation}) => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <View style={
-        {
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row', 
-          flexWrap: 'wrap'
-        }
-        }>
+      <View style={styles.headerContainer}>
+        <Text style={styles.pickCategoriesText}>
+          Pick some activities to do : 
+        </Text>
+      </View>
+
+      <View style={styles.categoryView}>
         {
           poisCategories.map(
             (category, index) => {
@@ -53,6 +130,29 @@ const PointOfInterestSelectionScreen = ({navigation}) => {
             }
           )
         }
+      </View>
+
+      <View style={styles.navigationFooter}>
+        <View style={styles.backButton}>
+          <Icon
+            raised 
+            name='chevron-left' 
+            type='font-awesome' 
+            reverse 
+            color={'#258FFF'}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        <View style={styles.nextButton}>
+          <Icon
+            raised 
+            name='check' 
+            type='font-awesome' 
+            reverse 
+            color={'#258FFF'}
+            onPress={handleSubmit}
+          />
+        </View>
       </View>
     </SafeAreaView>
   )
@@ -68,6 +168,13 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1
+  },
+  categoryView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row', 
+    flexWrap: 'wrap'
   },
   nextButton : {
     flex: 1,
@@ -103,5 +210,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 'auto',
     marginBottom: 'auto'
-  }
+  },
+  nextButton : {
+    flex: 1,
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  },
+  backButton : {
+    flex: 1,
+  },
+  navigationFooter : {
+    flexDirection: 'row'
+  },
+  headerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: "white",
+    width: "80%",
+    margin: 15
+  },
+  pickCategoriesText: {
+    fontWeight : "bold",
+    fontSize : 15,
+    margin: 15
+  },
+  bubbleSelected: {
+    borderWidth: 5,
+    borderColor: "#258FFF",
+  },
 })
