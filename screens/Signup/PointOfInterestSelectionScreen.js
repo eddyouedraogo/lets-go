@@ -66,9 +66,11 @@ const PointOfInterestSelectionScreen = ({route, navigation}) => {
     const username = authData.userData?.userName;
     const poisCategories = authData.selectedCategories;
     const favouriteCities = authData.selectedCities;
+    const userId = authData.userId;
     addDoc(
-      collection(db, "User"), 
+      collection(db, "UserDetails"), 
       {
+        userId: userId,
         username : username,
         favouriteCities: favouriteCities,
         poisCategories: poisCategories
@@ -76,7 +78,7 @@ const PointOfInterestSelectionScreen = ({route, navigation}) => {
     )
     .then(
       (docRef) => {
-        console.log(docRef.id, docRef);
+        // console.log(docRef.id, docRef);
       }
     )
     .catch(
@@ -92,7 +94,7 @@ const PointOfInterestSelectionScreen = ({route, navigation}) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user.email);
+        authData.userId = user.uid;
         addUserData(authData);
       })
       .catch(
